@@ -1,36 +1,131 @@
-# Sensu::Opsone::Check
+# sensu-opsone-check
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sensu/opsone/check`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This project contains several monitoring script for sensu-go. They can be found in `lib/sensu-opsone-check`.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'sensu-opsone-check'
+Asset definition
+```
+---
+type: Asset
+api_version: core/v2
+metadata:
+  name: sensu-plugins-opsone_debian_amd64
+  labels: 
+  annotations:
+spec:
+  url: https://leonbaudouin.fr/sensu-opsone-check-0.1.0.tar.gz
+  sha512: 83b2b82b04659e67c9aa72699710a5f670846ca054f459b591714cfaa625e495e035105a123440592c4190223c646939c6560f9f9a24ef02129e6260284b4526
+  filters:
+  - entity.system.os == 'linux'
+  - entity.system.arch == 'amd64'
+  - entity.system.platform_family == 'debian'
 ```
 
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install sensu-opsone-check
 
 ## Usage
 
-TODO: Write usage instructions here
+### bin/check-ftp-backup
 
-## Development
+This plugin checks if a /var/archives files exists in a FTP folder and compare files sizes.
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Options:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```
+-d, --directory-name DIR_NAME    The name of directory to check
+-h, --ftp-host HOST              FTP Hostname (required)
+-p, --ftp-password PASS          FTP Password
+-u, --ftp-user USER              FTP User
+```
 
-## Contributing
+Check definition:
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/sensu-opsone-check.
+```
+---
+type: CheckConfig
+metadata:
+  name: check_ftp_backup
+spec:
+  command: check-ftp-backup.rb -h {{ index .labels "ftp_backup_hostname" }} -u {{ index .labels "ftp_backup_user" }} -p {{ index .labels "ftp_backup_password" }}
+  handlers: [slack]
+  high_flap_threshold: 0
+  cron: '0 14 * * *'
+  low_flap_threshold: 0
+  publish: true
+  runtime_assets:
+  - sensu-plugins-opsone_debian_amd64
+  - sensu-ruby-runtime_debian_amd64
+  subscriptions:
+  - ftp_backup
+```
 
+### bin/check-s3-backup
+
+This plugin checks if a /var/archives files exists in a bucket and/or is not too old.
+
+Options:
+
+```
+-a AWS_ACCESS_KEY,               AWS Access Key. Either set ENV['AWS_ACCESS_KEY'] or provide it as an option
+    --aws-access-key
+-e, --aws-endpoint ENDPOINT      AWS Endpoint (defaults to https://s3.eu-west-3.amazonaws.com).
+-r, --aws-region REGION          AWS Region (defaults to eu-west-3).
+-k AWS_SECRET_KEY,               AWS Secret Access Key. Either set ENV['AWS_SECRET_KEY'] or provide it as an option
+    --aws-secret-access-key
+-b, --bucket-name BUCKET_NAME    The name of the S3 bucket where object lives (required)
+-d, --directory-name DIR_NAME    The name of directory to check
+-u, --use-iam                    Use IAM role authenticiation. Instance must have IAM role assigned for this to work
+```
+
+Check definition:
+
+```
+---
+type: CheckConfig
+metadata:
+  name: check_s3_backup
+spec:
+  command: check-s3-backup.rb -a {{ index .labels "s3_backup_access_key" }} -k {{ index .labels "s3_backup_secret_key" }} -b {{ index .labels "s3_backup_bucket" }} -e {{ index .labels "s3_backup_endpoint" }} -r {{ index .labels "s3_backup_region" }}
+  handlers: [slack]
+  high_flap_threshold: 0
+  cron: '0 14 * * *'
+  low_flap_threshold: 0
+  publish: true
+  runtime_assets:
+  - sensu-plugins-opsone_debian_amd64
+  - sensu-ruby-runtime_debian_amd64
+  subscriptions:
+  - s3_backup
+```
+
+## Compile it yourself
+
+1. Clone this repository
+2. Execute:
+
+```
+$ bundle install --standalone --binstubs ./bin
+```
+
+3. Manually correct load path in both `bin/check-ftp-backup.rb` and `bin/check-ftp-backup.rb` from:
+
+```
+../../exe/check-ftp-backup.rb
+```
+to:
+
+```
+../../lib/sensu-opsone-check/check-ftp-backup.rb
+```
+
+4. Compress it
+
+```
+$ tar -C ./ -cvzf sensu-opsone-check-0.1.0.tar.gz .
+```
+
+5. Calculate checksum
+
+```
+$ sha512sum sensu-opsone-check-0.1.0.tar.gz | tee sha512sum.txt
+```
