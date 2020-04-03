@@ -107,15 +107,15 @@ spec:
 $ bundle install --standalone --binstubs ./bin
 ```
 
-3. Manually correct load path in both `bin/check-ftp-backup.rb` and `bin/check-ftp-backup.rb` from:
+3. Manually correct load path in both `bin/check-ftp-backup.rb` and `bin/check-s3-backup.rb` from:
 
 ```
-../../exe/check-ftp-backup.rb
+../../exe/check-[ftp|s3]-backup.rb
 ```
 to:
 
 ```
-../../lib/sensu-opsone-check/check-ftp-backup.rb
+../../lib/sensu-opsone-check/check-[ftp|s3]-backup.rb
 ```
 
 4. Compress it
@@ -127,5 +127,5 @@ $ tar -C ./ -cvzf sensu-opsone-check-0.1.0.tar.gz .
 5. Calculate checksum
 
 ```
-$ sha512sum sensu-opsone-check-0.1.0.tar.gz | tee sha512sum.txt
+$ sha512sum sensu-opsone-check-0.1.0.tar.gz
 ```
