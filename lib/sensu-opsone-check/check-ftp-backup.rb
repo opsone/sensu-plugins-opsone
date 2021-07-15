@@ -57,7 +57,7 @@ class CheckFtpBackup < Sensu::Plugin::Check::CLI
     ftp.binary = true
 
     Dir.glob("#{config[:directory_name]}/*") do |file|
-      next if File.extname(file) == '.md5'
+      next if File.extname(file) == '.md5' || File.directory?(file)
 
       file_name = File.basename(file)
       file_size = File.size(file)
