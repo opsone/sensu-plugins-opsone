@@ -14,8 +14,8 @@ metadata:
   labels: 
   annotations:
 spec:
-  url: https://github.com/opsone/sensu-plugins-opsone/releases/download/v0.1.0/sensu-opsone-check-0.1.0.tar.gz
-  sha512: 5a39be30c93650dfce8f24b96389fab4d2525b1ae69c335df6500dcfefd30e0aed2f9b8896a629eee2f27c193032ac4a680f53e3f75f84c32e9edef612cefec9
+  url: https://github.com/opsone/sensu-plugins-opsone/releases/download/v0.1.1/sensu-plugins-opsone-0.1.1.tar.gz
+  sha512: 3018cf4c1149d2e6cd9c41e38917276987c1cc615e3d2fc4327efeda358e1c878bd3bb2a01d72a8f43a7e4eb479c407b8a7f9b927600c0b73e43e6017760010f
   filters:
   - entity.system.os == 'linux'
   - entity.system.arch == 'amd64'
