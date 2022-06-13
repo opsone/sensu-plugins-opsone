@@ -45,15 +45,21 @@ class CheckFtpBackup < Sensu::Plugin::Check::CLI
          description: 'FTP Hostname',
          required: true
 
+  option :ftp_directory,
+         short: '-D DIR_NAME',
+         long: '--ftp-directory DIR_NAME',
+         description: 'FTP directory'
+
   option :directory_name,
          short: '-d DIR_NAME',
-         long: '--directory-name',
+         long: '--directory-name DIR_NAME',
          description: 'The name of directory to check',
          default: '/var/archives'
 
   def run
     ftp = Net::FTP.new config[:ftp_host]
     ftp.login config[:ftp_user], config[:ftp_password]
+    ftp.chdir config[:ftp_directory] if config[:ftp_directory]
     ftp.binary = true
 
     Dir.glob("#{config[:directory_name]}/*") do |file|

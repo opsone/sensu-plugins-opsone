@@ -6,13 +6,13 @@ require_relative 'lib/sensu-opsone-check/version'
 Gem::Specification.new do |spec|
   spec.name          = 'sensu-opsone-check'
   spec.version       = Sensu::Opsone::Check::VERSION
-  spec.authors       = ['leon.baudouin']
-  spec.email         = ['leon.baudouin@opsone.net']
+  spec.authors       = ['leon.baudouin', 'kevyn.lebouille']
+  spec.email         = ['leon.baudouin@opsone.net', 'kevyn.lebouille@opsone.net']
 
   spec.executables   = Dir.glob('bin/**/*.rb').map { |file| File.basename(file) }
   spec.summary       = 'Sensu custom check by Opsone for backup'
   # spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = 'https://opsone.net'
+  spec.homepage      = 'https://www.opsone.net'
   spec.required_ruby_version = Gem::Requirement.new('>= 2.4.0')
 
   spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
