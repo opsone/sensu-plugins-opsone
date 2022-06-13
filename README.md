@@ -11,11 +11,11 @@ type: Asset
 api_version: core/v2
 metadata:
   name: sensu-plugins-opsone_debian_amd64
-  labels: 
+  labels:
   annotations:
 spec:
-  url: https://github.com/opsone/sensu-plugins-opsone/releases/download/v0.1.1/sensu-plugins-opsone-0.1.1.tar.gz
-  sha512: abc35579e7d9af78e6894b9ae65f79644bc27ec39ee0d9dd296d529d13a4f0c6168f1d0460b10458b6c431a53381feedea71f4c6ccb84b2536db040fb85529da
+  url: https://github.com/opsone/sensu-plugins-opsone/releases/download/v0.1.2/sensu-plugins-opsone-0.1.2.tar.gz
+  sha512: 194f9025296114d513e9ec89ccd12d4dcc9af649e900178311263645eed7edea8f1830524208b3188d6579ada3816b941f41ae392a7e2e95cbabd40d34d20350
   filters:
   - entity.system.os == 'linux'
   - entity.system.arch == 'amd64'
@@ -32,6 +32,7 @@ This plugin checks if a /var/archives files exists in a FTP folder and compare f
 Options:
 
 ```
+-D, --ftp-directory DIR_NAME     FTP directory
 -d, --directory-name DIR_NAME    The name of directory to check
 -h, --ftp-host HOST              FTP Hostname (required)
 -p, --ftp-password PASS          FTP Password
@@ -118,14 +119,14 @@ to:
 ../../lib/sensu-opsone-check/check-[ftp|s3]-backup.rb
 ```
 
-4. Compress it
+4. Release it on Github
 
 ```
-$ tar -C ./ -cvzf sensu-opsone-check-0.1.0.tar.gz .
+wget https://github.com/opsone/sensu-plugins-opsone/archive/refs/tags/v0.1.2.tar.gz
 ```
 
-5. Calculate checksum
+5. Download it and calculate checksum
 
 ```
-$ sha512sum sensu-opsone-check-0.1.0.tar.gz
+$ shasum -a 512 sensu-opsone-check-0.1.2.tar.gz
 ```
